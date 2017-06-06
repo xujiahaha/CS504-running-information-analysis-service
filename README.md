@@ -1,6 +1,6 @@
 # CS504-running-information-analysis-service
 **running-information-analysis-service** is a RESTful service in spring boot, using *[Maven](https://maven.apache.org/)* as build tool.
-#### Feature List:
+**Feature List:**
 - Upload runningInfo
 - delete runningInfo by runningId, remove all runningInfo 
 - get all runningInfo with sort and pagination. Page number, page size, sort direction, and sort property can be customized.
@@ -87,12 +87,12 @@ Example:
 
 #### 4. Find all runningInfo with sort and pagination
 > URL: /runningInfo <br />
-> HTTP Method: GET <br />
+> HTTP Method: **GET** <br />
 > Success Response: 200 (OK) <br />
 
 URL Params: <br />
 
-| Param | Optinal | Description | Default Value | Example |
+| Param | Optional | Description | Default Value | Example |
 |--------|--------|-------------|---------------|---------|
 | page | yes | set page number | 0 | page=1|
 | size | yes | set page size | 2 | size=5 |
