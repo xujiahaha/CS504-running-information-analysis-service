@@ -35,6 +35,7 @@ mysql> SHOW DATABASES;
 mysql> USE runningInfoAnalysis_db;
 mysql> SHOW TABLES;
 mysql> CREATE TABLE RUNNING_ANALYSIS (id BIGINT(20) AUTO_INCREMENT, runningId VARCHAR(50), latitude DOUBLE, longitude DOUBLE, runningDistance DOUBLE, totalRunningTime DOUBLE, timestamp TIMESTAMP, healthWarningLevel INT, heartRate INT, userName VARCHAR(30), userAddress VARCHAR(50), PRIMARY KEY(id));
+mysql> exit;
 ```
 #### 4. Build and run Spring Boot application
 ```
