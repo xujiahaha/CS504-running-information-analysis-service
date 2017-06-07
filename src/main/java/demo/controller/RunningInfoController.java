@@ -49,8 +49,8 @@ public class RunningInfoController {
     public String findAllRunningInfoOrderBySingleProperty(
             @RequestParam(value = "page", required = false, defaultValue = DEFAULT_PAGE_NUMBER) int page,
             @RequestParam(value = "size", required = false, defaultValue = DEFAULT_PAGE_SIZE) int size,
-            @RequestParam(value = "orderDir", required = false, defaultValue = DEFAULT_SORT_DIR) String sortDir,
-            @RequestParam(value = "orderBy", required = false, defaultValue = DEFAULT_SORT_BY) String sortBy) {
+            @RequestParam(value = "sortDir", required = false, defaultValue = DEFAULT_SORT_DIR) String sortDir,
+            @RequestParam(value = "sortBy", required = false, defaultValue = DEFAULT_SORT_BY) String sortBy) {
 
         Page<RunningInfo> rawRunningInfo = this.runningInfoService.findAllRunningInfoOrderBySingleProperty(page, size, sortDir, sortBy);
         List<RunningInfo> runningInfoContents = rawRunningInfo.getContent();
