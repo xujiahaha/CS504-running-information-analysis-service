@@ -17,6 +17,8 @@ public interface RunningInfoService {
 
     void deleteAll();
 
+    RunningInfo findRunningInfoByRunningId(String runningId);
+
     // get all running information and order them by one property
     Page<RunningInfo> findAllRunningInfoOrderBySingleProperty(int page, int size, String sortDir, String sortBy);
 

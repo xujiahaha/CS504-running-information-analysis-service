@@ -42,6 +42,11 @@ public class RunningInfoServiceImpl implements RunningInfoService{
     }
 
     @Override
+    public RunningInfo findRunningInfoByRunningId(String runningId) {
+        return this.runningInfoRepository.findByRunningId(runningId);
+    }
+
+    @Override
     public Page<RunningInfo> findAllRunningInfoOrderBySingleProperty(int page, int size, String sortDir, String sortBy) {
         Pageable pageable = new PageRequest(page, size, Sort.Direction.fromString(sortDir.toLowerCase()), sortBy);
         return this.runningInfoRepository.findAll(pageable);

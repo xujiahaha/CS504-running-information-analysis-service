@@ -1,12 +1,14 @@
 package demo.controller;
 
 import demo.domain.RunningInfo;
+import demo.domain.RunningInfoDto;
 import demo.service.RunningInfoService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,27 +47,52 @@ public class RunningInfoController {
         this.runningInfoService.deleteByRunningId(runningId);
     }
 
+    @RequestMapping(value = "runningInfo/{runningId}", method = RequestMethod.GET)
+    public ResponseEntity<?> findRunningInfoByRunningId(@PathVariable("runningId") String runningId) {
+        RunningInfo runningInfo = runningInfoService.findRunningInfoByRunningId(runningId);
+        if(runningInfo == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(new RunningInfoDto(runningInfo));
+    }
+
     @RequestMapping(value = "/runningInfo", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String findAllRunningInfoOrderBySingleProperty(
+    public List<RunningInfoDto> findAllRunningInfoOrderBySingleProperty(
             @RequestParam(value = "page", required = false, defaultValue = DEFAULT_PAGE_NUMBER) int page,
             @RequestParam(value = "size", required = false, defaultValue = DEFAULT_PAGE_SIZE) int size,
             @RequestParam(value = "sortDir", required = false, defaultValue = DEFAULT_SORT_DIR) String sortDir,
             @RequestParam(value = "sortBy", required = false, defaultValue = DEFAULT_SORT_BY) String sortBy) {
 
-        Page<RunningInfo> rawRunningInfo = this.runningInfoService.findAllRunningInfoOrderBySingleProperty(page, size, sortDir, sortBy);
-        List<RunningInfo> runningInfoContents = rawRunningInfo.getContent();
-        List<JSONObject> runningInfoDto = new ArrayList<>(page);
+        Page<RunningInfo> runningInfo = this.runningInfoService.findAllRunningInfoOrderBySingleProperty(page, size, sortDir, sortBy);
+        List<RunningInfo> runningInfoContents = runningInfo.getContent();
+        List<RunningInfoDto> runningInfoDto = new ArrayList<>(page);
         for(RunningInfo item : runningInfoContents) {
-            JSONObject info = new JSONObject();
-            info.put("runningId", item.getRunningId());
-            info.put("totalRunningTime", item.getTotalRunningTime());
-            info.put("heartRate", item.getHeartRate());
-            info.put("userName", item.getUserName());
-            info.put("userAddress", item.getUserAddress());
-            info.put("healthWarningLevel", item.getHealthWarningLevel());
-            runningInfoDto.add(info);
+            runningInfoDto.add(new RunningInfoDto(item));
         }
-        return runningInfoDto.toString();
+        return runningInfoDto;
     }
+
+//    @RequestMapping(value = "/runningInfo", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+//    public String findAllRunningInfoOrderBySingleProperty(
+//            @RequestParam(value = "page", required = false, defaultValue = DEFAULT_PAGE_NUMBER) int page,
+//            @RequestParam(value = "size", required = false, defaultValue = DEFAULT_PAGE_SIZE) int size,
+//            @RequestParam(value = "sortDir", required = false, defaultValue = DEFAULT_SORT_DIR) String sortDir,
+//            @RequestParam(value = "sortBy", required = false, defaultValue = DEFAULT_SORT_BY) String sortBy) {
+//
+//        Page<RunningInfo> rawRunningInfo = this.runningInfoService.findAllRunningInfoOrderBySingleProperty(page, size, sortDir, sortBy);
+//        List<RunningInfo> runningInfoContents = rawRunningInfo.getContent();
+//        List<JSONObject> runningInfoDto = new ArrayList<>(page);
+//        for(RunningInfo item : runningInfoContents) {
+//            JSONObject info = new JSONObject();
+//            info.put("runningId", item.getRunningId());
+//            info.put("totalRunningTime", item.getTotalRunningTime());
+//            info.put("heartRate", item.getHeartRate());
+//            info.put("userName", item.getUserName());
+//            info.put("userAddress", item.getUserAddress());
+//            info.put("healthWarningLevel", item.getHealthWarningLevel());
+//            runningInfoDto.add(info);
+//        }
+//        return runningInfoDto.toString();
+//    }
 
 }
