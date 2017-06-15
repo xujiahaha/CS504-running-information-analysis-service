@@ -2,6 +2,7 @@ package demo.service.impl;
 
 
 import demo.domain.RunningInfo;
+import demo.domain.RunningInfoDto;
 import demo.domain.RunningInfoRepository;
 import demo.service.RunningInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -42,14 +44,22 @@ public class RunningInfoServiceImpl implements RunningInfoService{
     }
 
     @Override
-    public RunningInfo findRunningInfoByRunningId(String runningId) {
-        return this.runningInfoRepository.findByRunningId(runningId);
+    public RunningInfoDto findRunningInfoByRunningId(String runningId) {
+        RunningInfo runningInfo = this.runningInfoRepository.findByRunningId(runningId);
+        if(runningInfo == null) return null;
+        return new RunningInfoDto(runningInfo);
     }
 
     @Override
-    public Page<RunningInfo> findAllRunningInfoOrderBySingleProperty(int page, int size, String sortDir, String sortBy) {
+    public List<RunningInfoDto> findAllRunningInfoOrderBySingleProperty(int page, int size, String sortDir, String sortBy) {
         Pageable pageable = new PageRequest(page, size, Sort.Direction.fromString(sortDir.toLowerCase()), sortBy);
-        return this.runningInfoRepository.findAll(pageable);
+        Page<RunningInfo> runningInfo = this.runningInfoRepository.findAll(pageable);
+        List<RunningInfo> runningInfoContents = runningInfo.getContent();
+        List<RunningInfoDto> runningInfoDto = new ArrayList<>(page);
+        for(RunningInfo item : runningInfoContents) {
+            runningInfoDto.add(new RunningInfoDto(item));
+        }
+        return runningInfoDto;
     }
 
 }

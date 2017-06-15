@@ -49,11 +49,11 @@ public class RunningInfoController {
 
     @RequestMapping(value = "runningInfo/{runningId}", method = RequestMethod.GET)
     public ResponseEntity<?> findRunningInfoByRunningId(@PathVariable("runningId") String runningId) {
-        RunningInfo runningInfo = runningInfoService.findRunningInfoByRunningId(runningId);
-        if(runningInfo == null) {
+        RunningInfoDto runningInfoDto = this.runningInfoService.findRunningInfoByRunningId(runningId);
+        if(runningInfoDto == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(new RunningInfoDto(runningInfo));
+        return ResponseEntity.ok(runningInfoDto);
     }
 
     @RequestMapping(value = "/runningInfo", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -62,37 +62,30 @@ public class RunningInfoController {
             @RequestParam(value = "size", required = false, defaultValue = DEFAULT_PAGE_SIZE) int size,
             @RequestParam(value = "sortDir", required = false, defaultValue = DEFAULT_SORT_DIR) String sortDir,
             @RequestParam(value = "sortBy", required = false, defaultValue = DEFAULT_SORT_BY) String sortBy) {
-
-        Page<RunningInfo> runningInfo = this.runningInfoService.findAllRunningInfoOrderBySingleProperty(page, size, sortDir, sortBy);
-        List<RunningInfo> runningInfoContents = runningInfo.getContent();
-        List<RunningInfoDto> runningInfoDto = new ArrayList<>(page);
-        for(RunningInfo item : runningInfoContents) {
-            runningInfoDto.add(new RunningInfoDto(item));
-        }
-        return runningInfoDto;
+        return this.runningInfoService.findAllRunningInfoOrderBySingleProperty(page, size, sortDir, sortBy);
     }
 
-//    @RequestMapping(value = "/runningInfo", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-//    public String findAllRunningInfoOrderBySingleProperty(
-//            @RequestParam(value = "page", required = false, defaultValue = DEFAULT_PAGE_NUMBER) int page,
-//            @RequestParam(value = "size", required = false, defaultValue = DEFAULT_PAGE_SIZE) int size,
-//            @RequestParam(value = "sortDir", required = false, defaultValue = DEFAULT_SORT_DIR) String sortDir,
-//            @RequestParam(value = "sortBy", required = false, defaultValue = DEFAULT_SORT_BY) String sortBy) {
-//
-//        Page<RunningInfo> rawRunningInfo = this.runningInfoService.findAllRunningInfoOrderBySingleProperty(page, size, sortDir, sortBy);
-//        List<RunningInfo> runningInfoContents = rawRunningInfo.getContent();
-//        List<JSONObject> runningInfoDto = new ArrayList<>(page);
-//        for(RunningInfo item : runningInfoContents) {
-//            JSONObject info = new JSONObject();
-//            info.put("runningId", item.getRunningId());
-//            info.put("totalRunningTime", item.getTotalRunningTime());
-//            info.put("heartRate", item.getHeartRate());
-//            info.put("userName", item.getUserName());
-//            info.put("userAddress", item.getUserAddress());
-//            info.put("healthWarningLevel", item.getHealthWarningLevel());
-//            runningInfoDto.add(info);
-//        }
-//        return runningInfoDto.toString();
-//    }
+/*    @RequestMapping(value = "/runningInfo", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String findAllRunningInfoOrderBySingleProperty(
+            @RequestParam(value = "page", required = false, defaultValue = DEFAULT_PAGE_NUMBER) int page,
+            @RequestParam(value = "size", required = false, defaultValue = DEFAULT_PAGE_SIZE) int size,
+            @RequestParam(value = "sortDir", required = false, defaultValue = DEFAULT_SORT_DIR) String sortDir,
+            @RequestParam(value = "sortBy", required = false, defaultValue = DEFAULT_SORT_BY) String sortBy) {
+
+        Page<RunningInfo> rawRunningInfo = this.runningInfoService.findAllRunningInfoOrderBySingleProperty(page, size, sortDir, sortBy);
+        List<RunningInfo> runningInfoContents = rawRunningInfo.getContent();
+        List<JSONObject> runningInfoDto = new ArrayList<>(page);
+        for(RunningInfo item : runningInfoContents) {
+            JSONObject info = new JSONObject();
+            info.put("runningId", item.getRunningId());
+            info.put("totalRunningTime", item.getTotalRunningTime());
+            info.put("heartRate", item.getHeartRate());
+            info.put("userName", item.getUserName());
+            info.put("userAddress", item.getUserAddress());
+            info.put("healthWarningLevel", item.getHealthWarningLevel());
+            runningInfoDto.add(info);
+        }
+        return runningInfoDto.toString();
+    }*/
 
 }

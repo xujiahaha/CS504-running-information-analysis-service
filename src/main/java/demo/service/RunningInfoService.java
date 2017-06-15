@@ -1,6 +1,7 @@
 package demo.service;
 
 import demo.domain.RunningInfo;
+import demo.domain.RunningInfoDto;
 import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,9 +18,9 @@ public interface RunningInfoService {
 
     void deleteAll();
 
-    RunningInfo findRunningInfoByRunningId(String runningId);
+    RunningInfoDto findRunningInfoByRunningId(String runningId);
 
     // get all running information and order them by one property
-    Page<RunningInfo> findAllRunningInfoOrderBySingleProperty(int page, int size, String sortDir, String sortBy);
+    List<RunningInfoDto> findAllRunningInfoOrderBySingleProperty(int page, int size, String sortDir, String sortBy);
 
 }
