@@ -1,9 +1,6 @@
 package demo.service;
 
 import demo.domain.RunningInfo;
-import demo.domain.RunningInfoDto;
-import org.springframework.data.domain.Page;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -13,7 +10,6 @@ public interface RunningInfoService {
 
     List<RunningInfo> saveRunningInfoList(List<RunningInfo> runningInfoList);
 
-    @Transactional
     void deleteByRunningId(String runningId);
 
     void deleteAll();
@@ -23,4 +19,6 @@ public interface RunningInfoService {
     // get all running information and order them by one property
     List<RunningInfoDto> findAllRunningInfoOrderBySingleProperty(int page, int size, String sortDir, String sortBy);
 
+    // get running information by username and order them by timestamp. most recent one is on top.
+    List<RunningInfoDto> findRunningInfoByUsernameOrderByTimestampDesc(int page, int size, String username);
 }

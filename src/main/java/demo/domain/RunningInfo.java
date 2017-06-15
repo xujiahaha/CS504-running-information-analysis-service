@@ -13,7 +13,7 @@ import java.util.Random;
 @Table(name = "RUNNING_ANALYSIS")
 public class RunningInfo {
 
-    enum HealthWarningLevel {
+    public enum HealthWarningLevel {
         LOW, NORMAL, HIGH, ABNORMAL;
 
         public static HealthWarningLevel getHealthWarningLevel(int heartRate) {

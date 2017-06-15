@@ -9,9 +9,11 @@ import org.springframework.data.repository.query.Param;
 
 public interface RunningInfoRepository extends JpaRepository<RunningInfo, String> {
 
+    void deleteByRunningId(@Param("RunningId") String runningId);
+
     RunningInfo findByRunningId(@Param("runningId") String runningId);
 
     Page<RunningInfo> findAll(Pageable pageable);
 
-    void deleteByRunningId(@Param("RunningId") String runningId);
+    Page<RunningInfo> findByUserInfoUsernameOrderByTimestampDesc(@Param("username") String username, Pageable pageable);
 }

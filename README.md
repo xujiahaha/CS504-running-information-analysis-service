@@ -7,6 +7,7 @@
 - delete runningInfo by runningId
 - find runningInfo by runningId
 - get all runningInfo with sort and pagination. Page number, page size, sort direction, and sort property can be customized.
+- get all runningInfo that belong to one user. Result is sorted by timestamp in descending order (i.e. the most recent one is on top). 
 
 ## Requirements 
 * Java Platform (JDK) 8
@@ -50,6 +51,18 @@ java -jar ./target/running-information-analysis-service-1.0.0.BUILD-SNAPSHOT.jar
 ```
 curl -H "Content-Type: application/json" localhost:8080/runningInfo -d @runningInfo.json
 ```
+
+## API Overview
+> Check API References for detailed information
+| Method | URL | Description | 
+|--------|--------|-------------|
+| POST | /runningInfo | upload a list of runningInfo | 
+| DELETE | runningInfo/purge | delete all runningInfo | 
+| DELETE | runningInfo/{runningId} | delete one runningInfo by runningId |
+| GET | /runningInfo/{runningId} | get one runningInfo by runningId | 
+| GET | /runningInfo | get all runningInfo with pagination and sort | 
+| GET | /{username}/runningInfo | get one user's runningInfo with pagination (sort by timestamp) | 
+
 
 ## API References
 ### 1. Upload runningInfo
@@ -103,7 +116,7 @@ Example:
 
 &nbsp;&nbsp;&nbsp;&nbsp;URL: `/runningInfo/{runningId}`
 
-&nbsp;&nbsp;&nbsp;&nbsp;URL Params: runningId **(required)** 
+&nbsp;&nbsp;&nbsp;&nbsp;Required URL Params: runningId
 
 &nbsp;&nbsp;&nbsp;&nbsp;HTTP Method: **GET** 
 
@@ -123,7 +136,7 @@ Example:
 
 &nbsp;&nbsp;&nbsp;&nbsp;Success Response: 200 (OK)
 
-URL Params: <br />
+Optional URL Params: <br />
 
 | Param | Optional | Description | Default Value | Example |
 |--------|--------|-------------|---------------|---------|
@@ -135,34 +148,82 @@ URL Params: <br />
 Example: 
 ```
 /runningInfo
-/runningInfo?page=0
-/runningInfo?page=0&size=4
-/runningInfo?page=0&size=4&sortDir=asc
-/runningInfo?page=0&size=4&sortDir=asc&sortBy=totalRunningTime
+/runningInfo?page=1
+/runningInfo?page=1&size=4
+/runningInfo?page=1&size=4&sortDir=asc
+/runningInfo?page=1&size=4&sortDir=asc&sortBy=totalRunningTime
 ```
 
 Sample Response:
 ```
 [
-  {
-    "runningId": "fb0b4725-ac25-4812-b425-d43a18c958bb",
-    "totalRunningTime": 123,
-    "heartRate": 193,
-    "userName": "ross4",
-    "userAddress": "504 CS Street, Mountain View, CA 88888",
-    "healthWarningLevel": "HIGH"
-  },
-  {
-    "runningId": "07e8db69-99f2-4fe2-b65a-52fbbdf8c32c",
-    "totalRunningTime": 3011.23,
-    "heartRate": 149,
-    "userName": "ross1",
-    "userAddress": "504 CS Street, Mountain View, CA 88888",
-    "healthWarningLevel": "HIGH"
-  }
+    {
+        "runningId": "07e8db69-99f2-4fe2-b65a-52fbbdf8c32c",
+        "timestamp": "2017-06-15T05:02:13Z",
+        "totalRunningTime": 3011.23,
+        "heartRate": 198,
+        "userName": "ross1",
+        "userAddress": "504 CS Street, Mountain View, CA 88888",
+        "healthWarningLevel": "HIGH"
+    },
+    {
+        "runningId": "fb0b4725-ac25-4812-b425-d43a18c958bb",
+        "timestamp": "2017-06-15T05:02:13Z",
+        "totalRunningTime": 123,
+        "heartRate": 189,
+        "userName": "ross4",
+        "userAddress": "504 CS Street, Mountain View, CA 88888",
+        "healthWarningLevel": "HIGH"
+    }
 ]
 ```
 
+### 6. Find all runningInfo belongs to one user with most recent one on top
+&nbsp;&nbsp;&nbsp;&nbsp;URL: `/{username}/runningInfo`
+
+&nbsp;&nbsp;&nbsp;&nbsp;HTTP Method: **GET** 
+
+&nbsp;&nbsp;&nbsp;&nbsp;Required URL Params: runningId
+
+&nbsp;&nbsp;&nbsp;&nbsp;Success Response: 200 (OK)
+
+Optional URL Params: <br />
+
+| Param | Optional | Description | Default Value | Example |
+|--------|--------|-------------|---------------|---------|
+| page | yes | set page number | 0 | page=1|
+| size | yes | set page size | 2 | size=5 |
+
+Example: 
+```
+/ross2/runningInfo
+/ross2//runningInfo?page=1
+/ross2//runningInfo?page=1&size=4
+```
+
+Sample Response:
+```
+[
+    {
+        "runningId": "2f3c321b-d239-43d6-8fe0-c035ecdff232",
+        "timestamp": "2017-06-15T05:02:13Z",
+        "totalRunningTime": 85560.23,
+        "heartRate": 129,
+        "userName": "ross2",
+        "userAddress": "504 CS Street, Mountain View, CA 88888",
+        "healthWarningLevel": "HIGH"
+    },
+    {
+        "runningId": "2f3c321b-d239-43d6-8fe0-c035ecdff231",
+        "timestamp": "2017-06-15T05:01:41Z",
+        "totalRunningTime": 85431.23,
+        "heartRate": 179,
+        "userName": "ross2",
+        "userAddress": "504 CS Street, Mountain View, CA 88888",
+        "healthWarningLevel": "HIGH"
+    }
+]
+```
 
  
 

@@ -1,16 +1,15 @@
 package demo.controller;
 
 import demo.domain.RunningInfo;
-import demo.domain.RunningInfoDto;
+import demo.service.RunningInfoDto;
 import demo.service.RunningInfoService;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.ArrayList;
+
 import java.util.List;
 
 @RestController
@@ -35,19 +34,19 @@ public class RunningInfoController {
         this.runningInfoService.saveRunningInfoList(runningInfoList);
     }
 
-    @RequestMapping(value = "runningInfo/purge", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/runningInfo/purge", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
     public void purge() {
         this.runningInfoService.deleteAll();
     }
 
-    @RequestMapping(value = "runningInfo/{runningId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/runningInfo/{runningId}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
     public void deleteByRunningId(@PathVariable("runningId") String runningId) {
         this.runningInfoService.deleteByRunningId(runningId);
     }
 
-    @RequestMapping(value = "runningInfo/{runningId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/runningInfo/{runningId}", method = RequestMethod.GET)
     public ResponseEntity<?> findRunningInfoByRunningId(@PathVariable("runningId") String runningId) {
         RunningInfoDto runningInfoDto = this.runningInfoService.findRunningInfoByRunningId(runningId);
         if(runningInfoDto == null) {
@@ -65,27 +64,12 @@ public class RunningInfoController {
         return this.runningInfoService.findAllRunningInfoOrderBySingleProperty(page, size, sortDir, sortBy);
     }
 
-/*    @RequestMapping(value = "/runningInfo", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String findAllRunningInfoOrderBySingleProperty(
+    @RequestMapping(value = "/{username}/runningInfo", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<RunningInfoDto> findRunningInfoByUsername(
+            @PathVariable("username") String username,
             @RequestParam(value = "page", required = false, defaultValue = DEFAULT_PAGE_NUMBER) int page,
-            @RequestParam(value = "size", required = false, defaultValue = DEFAULT_PAGE_SIZE) int size,
-            @RequestParam(value = "sortDir", required = false, defaultValue = DEFAULT_SORT_DIR) String sortDir,
-            @RequestParam(value = "sortBy", required = false, defaultValue = DEFAULT_SORT_BY) String sortBy) {
-
-        Page<RunningInfo> rawRunningInfo = this.runningInfoService.findAllRunningInfoOrderBySingleProperty(page, size, sortDir, sortBy);
-        List<RunningInfo> runningInfoContents = rawRunningInfo.getContent();
-        List<JSONObject> runningInfoDto = new ArrayList<>(page);
-        for(RunningInfo item : runningInfoContents) {
-            JSONObject info = new JSONObject();
-            info.put("runningId", item.getRunningId());
-            info.put("totalRunningTime", item.getTotalRunningTime());
-            info.put("heartRate", item.getHeartRate());
-            info.put("userName", item.getUserName());
-            info.put("userAddress", item.getUserAddress());
-            info.put("healthWarningLevel", item.getHealthWarningLevel());
-            runningInfoDto.add(info);
-        }
-        return runningInfoDto.toString();
-    }*/
+            @RequestParam(value = "size", required = false, defaultValue = DEFAULT_PAGE_SIZE) int size) {
+        return this.runningInfoService.findRunningInfoByUsernameOrderByTimestampDesc(page, size, username);
+    }
 
 }

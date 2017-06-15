@@ -2,8 +2,8 @@ package demo.service.impl;
 
 
 import demo.domain.RunningInfo;
-import demo.domain.RunningInfoDto;
 import demo.domain.RunningInfoRepository;
+import demo.service.RunningInfoDto;
 import demo.service.RunningInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,7 @@ public class RunningInfoServiceImpl implements RunningInfoService{
     }
 
     @Override
+    @Transactional
     public void deleteByRunningId(String runningId) {
         this.runningInfoRepository.deleteByRunningId(runningId);
     }
@@ -53,13 +55,21 @@ public class RunningInfoServiceImpl implements RunningInfoService{
     @Override
     public List<RunningInfoDto> findAllRunningInfoOrderBySingleProperty(int page, int size, String sortDir, String sortBy) {
         Pageable pageable = new PageRequest(page, size, Sort.Direction.fromString(sortDir.toLowerCase()), sortBy);
-        Page<RunningInfo> runningInfo = this.runningInfoRepository.findAll(pageable);
+        return createDtoResult(this.runningInfoRepository.findAll(pageable));
+    }
+
+    @Override
+    public List<RunningInfoDto> findRunningInfoByUsernameOrderByTimestampDesc(int page, int size, String username) {
+        Pageable pageable = new PageRequest(page, size);
+        return createDtoResult(this.runningInfoRepository.findByUserInfoUsernameOrderByTimestampDesc(username, pageable));
+    }
+
+    private List<RunningInfoDto> createDtoResult(Page<RunningInfo> runningInfo) {
         List<RunningInfo> runningInfoContents = runningInfo.getContent();
-        List<RunningInfoDto> runningInfoDto = new ArrayList<>(page);
+        List<RunningInfoDto> runningInfoDto = new ArrayList<>();
         for(RunningInfo item : runningInfoContents) {
             runningInfoDto.add(new RunningInfoDto(item));
         }
         return runningInfoDto;
     }
-
 }
